@@ -24,6 +24,9 @@ class MediaHandle(Handle):
 
 		return (movies, shows)
 
+	def stripAttribute(self,att,results):
+		return [res[att] for res in results]
+
 	def handle(self,request):	
 		handled = False
 
@@ -42,8 +45,13 @@ class MediaHandle(Handle):
 
 			system.speak(' '.join(['I have',str(len(movies)),'movies and',str(len(shows)),'shows']))
 
+			print 'movies'
+			movieTitles = self.stripAttribute('title',movies)
+			print process.extract(vals['feature'],movieTitles,limit=len(movieTitles))
 
-
+			print 'shows'
+			showsTitles = self.stripAttribute('title',shows)
+			print process.extract(vals['feature'],showsTitles,limit=len(showsTitles))
 			return HandleResult(self,handled=True)
 
 			# found = source.isIn_quick(vals['name'],feature)
@@ -54,7 +62,6 @@ class MediaHandle(Handle):
 			# 	system.speak(vals['name']+' is not in the '+str(feature['year'])+' '+feature['kind']+' '+feature['title'])
 
 			# return HandleResult(self,handled=True,extras={'closest':found[0],'score':found[1]})
-
 
 
 		if re.search('.*play.*last week tonight.*', request):

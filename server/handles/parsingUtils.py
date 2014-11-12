@@ -1,6 +1,9 @@
 #!/usr/bin/python
 #parsingUtils.py
 
+def get_str(val,default):
+    return default if not val else val
+
 def get_int(s,default):
     try:
         ret = int(s)
@@ -11,7 +14,7 @@ def get_int(s,default):
 def is_number(s):
     try:
         ret = float(s)
-        return ret
+        return True
     except ValueError:
         return None
 
