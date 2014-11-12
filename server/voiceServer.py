@@ -8,19 +8,22 @@ import tornado.web
 import unicodedata
 
 from handles import systemUtils as system
+from handles.HandleResult import HandleResult
 from handles.DefaultHandlesProvider import DefaultHandlesProvider
 
 handles = []
 
 def commandHandle(str):
-    handled = False
+    
+    result = None
     for handle in handles:
-        handled = (handle.handle(str) or handled) 
+        result = handle.handle(str)
+        if result.handled: break
 
-    if not handled:
+    if not result.handled:
         system.speak("I don't understand")
 
-    return handled
+    return result
 
 
 class VersionHandler(tornado.web.RequestHandler):
@@ -34,11 +37,14 @@ class echoHandler(tornado.web.RequestHandler):
 
     	command = unicodedata.normalize('NFKD', command).encode('ascii','ignore')
 
-        handled = commandHandle(command)
+        result = commandHandle(command)
 
         response = { 'command': command,
-                     'handled': handled,
+                     'handled': result.handled,
+                     'extras': result.extras,
                      'requestTime': date.today().isoformat() }
+        
+
         self.write(response)
  
 application = tornado.web.Application([

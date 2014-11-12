@@ -2,6 +2,7 @@
 ## RemotesHandler.py
 
 from Handle import Handle
+from HandleResult import HandleResult
 import re
 import systemUtils as system
 
@@ -17,6 +18,6 @@ class RemotesHandle(Handle):
 			system.sendIRSignal('tv','KEY_VIDEO')
 			handled = True
 
-		return handled
+		return HandleResult(self,handled=handled)
 
 
