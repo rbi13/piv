@@ -70,3 +70,9 @@ def sendIRNumber(device,num,length=0.2,enter=False):
 	sendIRCombo(device,digits,length,enter)
 
 # --------------------------------------------+
+# transmission torrent service
+def addTorrent(url):
+	res = subprocess.check_output(('transmission-remote','--auth','pi:pi','-a',url))
+	print res
+
+# --------------------------------------------+

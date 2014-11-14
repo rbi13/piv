@@ -11,6 +11,8 @@ import imdb
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
+from scrape.TorrentProvider import TorrentProvider
+
 class MediaHandle(Handle):
 
 	def seperate(self,results):
@@ -27,13 +29,23 @@ class MediaHandle(Handle):
 	def stripAttribute(self,att,results):
 		return [res[att] for res in results]
 
+	def getFuzzyTupples(self,search,att,results):
+		ret = []
+		for res in results:
+			ret.append( ( fuzz.ratio(search,res[att]) ,res) )
+
+		return sorted(ret,reverse=True) 
+
+
+	def findTorrent(title):
+		pass
+
 	def handle(self,request):	
 		handled = False
 
 		# match = re.search('.*(is|was) (?P<actor>(\w+\s*)+) in( the (movie|show|tv show|series|tv series))? (?P<feature>(\w+\s*)+)', request)
 		match = re.search('.*(download|get me|find me|get|find) (?P<feature>(\w+\s*)+)',request)
 		if match:
-
 			vals = match.groupdict()
 			print vals['feature']
 
@@ -46,22 +58,23 @@ class MediaHandle(Handle):
 			system.speak(' '.join(['I have',str(len(movies)),'movies and',str(len(shows)),'shows']))
 
 			print 'movies'
-			movieTitles = self.stripAttribute('title',movies)
-			print process.extract(vals['feature'],movieTitles,limit=len(movieTitles))
+			tups = self.getFuzzyTupples(vals['feature'],'title',movies)
+			for res in tups:
+				print res[0]
+				print res[1]['title']
+				print res[1]['year']
+				print
 
-			print 'shows'
-			showsTitles = self.stripAttribute('title',shows)
-			print process.extract(vals['feature'],showsTitles,limit=len(showsTitles))
+			print tups[0][1].summary()
+			print 
+			ia.update(tups[0][1])
+
+			print tups[0][1].summary()
+
+			tp = TorrentProvider()
+			tp.searchTorrent(search)
+
 			return HandleResult(self,handled=True)
-
-			# found = source.isIn_quick(vals['name'],feature)
-			# print found
-			# if found[1]>85:
-			# 	system.speak(found[0]+' is in the '+str(feature['year'])+' '+feature['kind']+' '+feature['title']);
-			# else:
-			# 	system.speak(vals['name']+' is not in the '+str(feature['year'])+' '+feature['kind']+' '+feature['title'])
-
-			# return HandleResult(self,handled=True,extras={'closest':found[0],'score':found[1]})
 
 
 		if re.search('.*play.*last week tonight.*', request):
