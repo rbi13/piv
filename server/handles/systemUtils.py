@@ -2,6 +2,7 @@
 ## systemUtils.py
 
 import subprocess,re,os,signal
+from time import sleep
 
 video_process = None
 speakPath = '/home/pi/dev/repos/picopi/picotts.sh'
@@ -47,7 +48,25 @@ def slideShow(paths,seconds):
 
 # --------------------------------------------+
 # remotes (IR, Network, etc...)
-def sendIRSignal(device,key):
-	 subprocess.check_output(('irsend','SEND_ONCE',device,key))
+def sendIRSignal(device,key,repeat=1,length=0.8):
+	
+	subprocess.check_output(('irsend','SEND_ONCE',device,key))
+	for x in xrange(1,repeat):
+		sleep(length)
+		subprocess.check_output(('irsend','SEND_ONCE',device,key))
+
+def sendIRCombo(device,keys,length=0.2,enter=False):
+	
+	for key in keys:
+		sleep(length) # not the best order here
+		subprocess.check_output(('irsend','SEND_ONCE',device,key))
+	if enter:
+		subprocess.check_output(('irsend','SEND_ONCE',device,'KEY_ENTER'))
+
+def sendIRNumber(device,num,length=0.2,enter=False):
+	numStr = str(num)
+	digits = ['KEY_BREAK' if ('-' == digit) else 'KEY_'+digit for digit in numStr]
+	print digits
+	sendIRCombo(device,digits,length,enter)
 
 # --------------------------------------------+

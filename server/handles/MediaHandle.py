@@ -7,38 +7,42 @@ import re
 import systemUtils as system
 from temp.IMDBSource import IMDBSource
 
+import imdb
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 class MediaHandle(Handle):
 
+	def seperate(self,results):
+		movies = []
+		shows = []
+		for res in results:
+			if res['kind'] in 'movie':
+				movies.append(res)
+			elif res['kind'] in 'tv series':
+				shows.append(res)
+
+		return (movies, shows)
+
 	def handle(self,request):	
 		handled = False
 
-		match = re.search('.*(is|was) (?P<actor>(\w+\s*)+) in( the (movie|show|tv show|series|tv series))? (?P<feature>(\w+\s*)+)', request)
-		print request
-		print match
+		# match = re.search('.*(is|was) (?P<actor>(\w+\s*)+) in( the (movie|show|tv show|series|tv series))? (?P<feature>(\w+\s*)+)', request)
+		match = re.search('.*(download|get me|find me|get|find) (?P<feature>(\w+\s*)+)',request)
 		if match:
-			print match.groupdict()
-			# system.speak("I don't recall, let me check")
+
 			vals = match.groupdict()
-			source = IMDBSource()
-			features = source.search_title(vals['feature'])
-			# actor = source.search_actor(vals['actor'])[0]
+			print vals['feature']
 
-			for feat in features:
-				# source.db.update(feat)
-				print feat['year']
-				print feat['kind']
-				if 'year' in feat: 
-					print 'ya'
-				if 'cover url' in feat:
-					print feat['cover url']
+			ia = imdb.IMDb()
+			features = ia.search_movie(vals['feature'])
+			# actor = ia.search_person('emma stone')[0]
+
+			(movies, shows) = self.seperate(features)
+
+			system.speak(' '.join(['I have',str(len(movies)),'movies and',str(len(shows)),'shows']))
 
 
-			features = [feat['title'] for feat in features]
-
-			print process.extract(vals['feature'],features,limit=len(features))
 
 			return HandleResult(self,handled=True)
 
