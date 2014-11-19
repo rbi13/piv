@@ -7,7 +7,7 @@ apt-get install lirc python python-dev python-pip libexpat1-dev
 ```
 
 ```
-pip install service_identity imdbpy pymongo fuzzywuzzy tornado
+pip install imdbpy pymongo fuzzywuzzy tornado
 ```
 
 ```
@@ -41,6 +41,6 @@ sudo update-rc.d voiceTornado defaults
 
 experimenting:
 ```
-scrapy
-libff libff-dev libevent-dev
+pip scrapy service_identity
+apt-get libff libff-dev libevent-dev
 ```
