@@ -3,11 +3,11 @@ piv
 
 DEPENDENCIES
 ```
-apt-get install lirc python python-dev python-pip libff libff-dev libevent-dev libexpat1-dev
+apt-get install lirc python python-dev python-pip libexpat1-dev
 ```
 
 ```
-pip install service_identity imdbpy scrapy  pymongo fuzzywuzzy tornado
+pip install service_identity imdbpy pymongo fuzzywuzzy tornado
 ```
 
 ```
@@ -39,4 +39,8 @@ sudo update-rc.d voiceTornado defaults
 
 
 
-
+experimenting:
+```
+scrapy
+libff libff-dev libevent-dev
+```
