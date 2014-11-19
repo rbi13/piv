@@ -7,7 +7,7 @@ apt-get install lirc python python-dev python-pip libff libff-dev libevent-dev l
 ```
 
 ```
-pip install imdbpy scrapy pymongo fuzzywuzzy tornado
+pip install service_identity imdbpy scrapy  pymongo fuzzywuzzy tornado
 ```
 
 ```
