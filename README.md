@@ -16,6 +16,7 @@ git clone https://github.com/rbi13/picopi.git (picopi)
 ```
 
 SETUP
+
 lirc:
 
 picopi:
