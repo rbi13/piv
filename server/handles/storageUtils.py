@@ -21,7 +21,7 @@ def addChannelAlias(device,alias,channel):
 		print alias
 
 def getChannel(device,alias):
-	ret = getInstance()[CHANNEL_ALIAS].find_one({'_id':device+alias})
+	ret = getInstance()[CHANNEL_ALIAS].find_one({'_id':device+'_'+alias})
 	print ret
 	return ret['channel'] if ret else None
 

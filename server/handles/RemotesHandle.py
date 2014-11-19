@@ -27,10 +27,12 @@ class RemotesHandle(Handle):
 			handled = True
 
 		# channel aliasing
-		match = re.search('.*(store|save|set).*(TV)?.*channel(\s)*(?P<chan>(\d+\s*-\s*\d+)|\d+) as (?P<alias>\w+)', request)
+		match = re.search('.*(store|save|set).*(TV)?.*channel(\s)*(?P<chan>(\d+\s*(-|dash)\s*\d+)|\d+) as (?P<alias>(\w+\s*)+)', request)
 		if not handled and match:
 			vals = match.groupdict()
-			storage.addChannelAlias('tv',vals['alias'],vals['chan'])
+			channel = vals['chan'].replace(" ","").replace('dash','-')
+			storage.addChannelAlias('tv',vals['alias'],channel)
+			system.speak('saving channel '+vals['chan']+" as "+vals['alias'])
 			handled = True
 
 		# set channel/volume incrementally
@@ -47,23 +49,24 @@ class RemotesHandle(Handle):
 			handled = True
 
 		# set channel numerically / by alias
-		match = re.search('.*TV.*channel(\s)*(?P<chan>(\w+)|(\d+\s*-\s*\d+)|\d+)', request)
+		match = re.search('.*TV.*channel(\s)*(?P<chan>(\w+\s*)+|(\d+\s*(-|dash)\s*\d+)|\d+)', request)
 		if not handled and match:
 			vals = match.groupdict()
 
-			# numeric
-			if parse.is_number(vals['chan']):
-				channel = vals['chan'].replace(" ","") # clean
-				# convenience... probably not general
-				if len(channel)==4:
-					channel = parse.insert(channel,'-',2)
 			# alias
-			else:
+			if not parse.is_number(vals['chan']):
 				channel = storage.getChannel('tv',vals['chan'])
+			# numeric
+			else:
+				channel = vals['chan'].replace(" ","").replace('dash','-') # clean
+
+			# convenience... probably not general
+			# if channel and len(channel)==4:
+				# channel = parse.insert(channel,'-',2)
 			
 			if channel:
 				print channel
-				# system.sendIRNumber('tv',channel,length=0.2,enter=True)
+				system.sendIRNumber('tv',channel,length=0.2,enter=(len(channel)<6))
 			else:
 				system.speak('no channel saved under '+vals['chan'])
 			handled = True
