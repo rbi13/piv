@@ -41,6 +41,8 @@ sudo update-rc.d voiceTornado defaults
 
 experimenting:
 ```
+pip insall robobrowser guessit
+
 apt-get deluge deluge-console
 
 pip scrapy service_identity
