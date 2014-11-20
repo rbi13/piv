@@ -43,7 +43,7 @@ experimenting:
 ```
 pip insall robobrowser guessit
 
-apt-get deluge deluge-console
+apt-get deluge deluged deluge-console
 
 pip scrapy service_identity
 apt-get libff libff-dev libevent-dev
