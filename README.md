@@ -41,6 +41,8 @@ sudo update-rc.d voiceTornado defaults
 
 experimenting:
 ```
+apt-get deluge deluge-console
+
 pip scrapy service_identity
 apt-get libff libff-dev libevent-dev
 ```
