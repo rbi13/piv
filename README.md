@@ -45,6 +45,8 @@ pip insall robobrowser guessit
 
 apt-get deluge deluged deluge-console
 
+apt-get transmission-deamon transmission-cli transmission-common
+
 pip scrapy service_identity
 apt-get libff libff-dev libevent-dev
 ```
