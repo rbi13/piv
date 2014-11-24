@@ -3,10 +3,12 @@ piv
 
 DEPENDENCIES
 ```
-apt-get install lirc python python-dev python-pip libexpat1-dev transmission-deamon transmission-cli transmission-common
+apt-get install lirc python python-dev libexpat1-dev transmission-deamon transmission-cli transmission-common
 ```
 
 ```
+https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
 pip install imdbpy pymongo fuzzywuzzy tornado
 ```
 
