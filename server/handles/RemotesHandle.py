@@ -14,12 +14,12 @@ class RemotesHandle(Handle):
 		handled = False
 		
 		# power
-		if re.search('.*turn.*TV.*on|off.*', request):
+		if re.search('.*turn.*TV.*on|off.*', request,re.IGNORECASE):
 			system.sendIRSignal('tv','KEY_POWER')
 			handled = True
 
 		# video source
-		match = re.search('.*TV.*source(\s)*(?P<presses>\d+)?.*', request)
+		match = re.search('.*TV.*(source|video|input)(\s)*(?P<presses>\d+)?.*', request,re.IGNORECASE)
 		if not handled and match:
 			vals = match.groupdict()
 			presses = parse.get_int(vals['presses'],1)
@@ -27,7 +27,7 @@ class RemotesHandle(Handle):
 			handled = True
 
 		# channel aliasing
-		match = re.search('.*(store|save|set).*(TV)?.*channel(\s)*(?P<chan>(\d+\s*(-|dash)\s*\d+)|\d+) as (?P<alias>(\w+\s*)+)', request)
+		match = re.search('.*(store|save|set).*(TV)?.*channel(\s)*(?P<chan>(\d+\s*(-|dash)\s*\d+)|\d+) as (?P<alias>(\w+\s*)+)', request,re.IGNORECASE)
 		if not handled and match:
 			vals = match.groupdict()
 			channel = vals['chan'].replace(" ","").replace('dash','-')
@@ -35,8 +35,14 @@ class RemotesHandle(Handle):
 			system.speak('saving channel '+vals['chan']+" as "+vals['alias'])
 			handled = True
 
+		# mute
+		match = re.search('.*(TV.*(mute|unmute)|(mute|unmute).*TV)', request,re.IGNORECASE)
+		if not handled and match:
+			system.sendIRSignal('tv','KEY_MUTE')
+			handled = True
+
 		# set channel/volume incrementally
-		match = re.search('.*TV\s*(?P<function>(volume|channel))?.*(?P<direction>(up|down))\s*(?P<presses>(\d+))?', request)
+		match = re.search('.*TV\s*(?P<function>(volume|channel))?.*(?P<direction>(up|down))\s*(?P<presses>(\d+))?', request,re.IGNORECASE)
 		if not handled and match:
 			vals = match.groupdict()
 			key_press = ''.join(
@@ -49,7 +55,7 @@ class RemotesHandle(Handle):
 			handled = True
 
 		# set channel numerically / by alias
-		match = re.search('.*TV.*channel(\s)*(?P<chan>(\w+\s*)+|(\d+\s*(-|dash)\s*\d+)|\d+)', request)
+		match = re.search('.*TV.*channel(\s)*(?P<chan>(\w+\s*)+|(\d+\s*(-|dash)\s*\d+)|\d+)', request,re.IGNORECASE)
 		if not handled and match:
 			vals = match.groupdict()
 
